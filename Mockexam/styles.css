@@ -1,0 +1,89 @@
+/* Global reset for consistent styling across browsers */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base styling for the body using a light blue background */
+body {
+  font-family: Arial, sans-serif; /* Use a sans-serif font for readability */
+  background-color: #e6f7ff; /* Light blue background color */
+  color: #333; /* Dark gray text for good contrast */
+  padding: 20px;
+}
+
+/* Container class for centering page content */
+.container {
+  max-width: 800px;
+  margin: 20px auto; /* Centered container with margin */
+  background-color: #fff; /* White background for the content */
+  padding: 30px;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Styling for headings with proper spacing and theme color */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #007acc; /* Darker blue for headings */
+}
+
+/* Styling for subject labels to add spacing between checkboxes */
+#subjects label {
+  margin-right: 15px;
+  margin-bottom: 10px;
+  display: inline-block;
+  font-size: 16px;
+}
+
+/* Button styling with a light blue theme and hover effects */
+button {
+  background-color: #007acc; /* Primary blue color */
+  color: #fff; /* White text on buttons */
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Disabled button styling */
+button:disabled {
+  background-color: #a0c4e8; /* A lighter blue when disabled */
+  cursor: not-allowed;
+}
+
+/* Styling each exam question container */
+#questions div {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Styling the radio options within each question */
+#questions label {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+/* Styling for input fields inside the final info form */
+input[type="email"],
+input[type="tel"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Utility class to hide elements */
+.hidden {
+  display: none;
+} 
