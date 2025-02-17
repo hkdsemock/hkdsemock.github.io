@@ -524,7 +524,15 @@
         
         questionsDiv.innerHTML = '';
         
-        subjectTitle.textContent = subject + ' 模擬試題';
+        // Set title based on subject
+        if (subject === '中文') {
+            subjectTitle.textContent = "中文DSE模擬試卷";
+        } else if (subject === 'English') {
+            subjectTitle.textContent = "English DSE Mock Exam";
+        } else {
+            subjectTitle.textContent = `${subject} DSE Mock Exam`;
+        }
+        
         progress.textContent = `第 ${currentSubjectIndex + 1} 科，共 ${selectedSubjects.length} 科`;
 
         // Show/hide back button based on current subject index
