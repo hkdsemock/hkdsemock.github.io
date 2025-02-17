@@ -323,7 +323,7 @@
     <!-- Next button to move to the next subject's questions -->
     <div class="button-container">
         <button id="back" class="hidden" style="padding: 10px 20px;">返回上一科</button>
-        <button id="next">Next</button>
+        <button id="next">下一科</button>
     </div>
   </div>
 
@@ -515,168 +515,168 @@
     });
 
     /******** Exam Page Logic ********/
-    function displayQuestion(subject, question) {
-      const subjectTitle = document.getElementById('subject-title');
-      const progress = document.getElementById('progress');
-      const questionsDiv = document.getElementById('questions');
-      
-      questionsDiv.innerHTML = '';
-
-      // If the subject is Chinese ("中文"), handle two parts
-      if (subject === '中文') {
-        subjectTitle.textContent = "中文DSE模擬試卷";
-        progress.textContent = `Subject ${currentSubjectIndex + 1} of ${selectedSubjects.length}`;
-
-        // Retrieve the Chinese exam content
-        const examContent = availableSubjects[subject];
-
-        // === Modern Prose Part ===
-        const modernInsDiv = document.createElement('div');
-        modernInsDiv.className = 'instruction-container';
-        modernInsDiv.innerHTML = examContent.modern.instruction;
-        questionsDiv.appendChild(modernInsDiv);
-
-        const modernPassageDiv = document.createElement('div');
-        modernPassageDiv.className = 'passage-container';
-        modernPassageDiv.innerHTML = examContent.modern.passage;
-        questionsDiv.appendChild(modernPassageDiv);
-
-        // Loop over modern questions
-        examContent.modern.questions.forEach((qObj, i) => {
-          const questionContainer = document.createElement('div');
-          questionContainer.className = 'question-container';
-          
-          let htmlStr = `
-              <p class="question-text">${qObj.question}</p>
-              <div class="math-container">${qObj.description}</div>
-              <div class="options-container">
-          `;
-          
-          for (const option in qObj.options) {
-              htmlStr += `
-                  <div class="option-container">
-                      <input type="radio" name="modernq${i}" value="${option}" id="modernq${i}${option}">
-                      <label for="modernq${i}${option}">${qObj.options[option]}</label>
-                  </div>
-              `;
-          }
-          
-          htmlStr += '</div>';
-          questionContainer.innerHTML = htmlStr;
-          questionsDiv.appendChild(questionContainer);
-        });
-
-        // Divider between parts
-        const divider = document.createElement('hr');
-        questionsDiv.appendChild(divider);
-
-        // === Classical Part ===
-        const classicalInsDiv = document.createElement('div');
-        classicalInsDiv.className = 'instruction-container';
-        classicalInsDiv.innerHTML = examContent.classical.instruction;
-        questionsDiv.appendChild(classicalInsDiv);
-
-        const classicalPassageDiv = document.createElement('div');
-        classicalPassageDiv.className = 'passage-container';
-        classicalPassageDiv.innerHTML = examContent.classical.passage;
-        questionsDiv.appendChild(classicalPassageDiv);
-
-        // Loop over classical questions
-        examContent.classical.questions.forEach((qObj, i) => {
-          const questionContainer = document.createElement('div');
-          questionContainer.className = 'question-container';
-          
-          let htmlStr = `
-              <p class="question-text">${qObj.question}</p>
-              <div class="math-container">${qObj.description}</div>
-              <div class="options-container">
-          `;
-          
-          for (const option in qObj.options) {
-              htmlStr += `
-                  <div class="option-container">
-                      <input type="radio" name="classicalq${i}" value="${option}" id="classicalq${i}${option}">
-                      <label for="classicalq${i}${option}">${qObj.options[option]}</label>
-                  </div>
-              `;
-          }
-          
-          htmlStr += '</div>';
-          questionContainer.innerHTML = htmlStr;
-          questionsDiv.appendChild(questionContainer);
-        });
-
-        renderMathInElement(questionsDiv);
-        return;
-      }
-
-      // For other subjects, process as before:
-      subjectTitle.textContent = subject + ' Questions';
-      progress.textContent = `Subject ${currentSubjectIndex + 1} of ${selectedSubjects.length}`;
-
-      // For English, display instruction and passage once at the top
-      if (subject === 'English') {
-        const instructionDiv = document.createElement('div');
-        instructionDiv.className = 'instruction-container';
-        instructionDiv.innerHTML = instruction;  // instruction imported from englishQuestions.js
-        questionsDiv.appendChild(instructionDiv);
-
-        const passageDiv = document.createElement('div');
-        passageDiv.className = 'passage-container';
-        passageDiv.innerHTML = passage;  // passage imported from englishQuestions.js
-        questionsDiv.appendChild(passageDiv);
-      }
-
-      // Retrieve the structured questions for this subject from availableSubjects.
-      const questions = availableSubjects[subject];
-      // Loop through each question and build its HTML.
-      for (let i = 0; i < questions.length; i++) {
-        const qObj = questions[i];
-        const questionContainer = document.createElement('div');
-        questionContainer.className = 'question-container';
+    function displayQuestion(subject) {
+        const subjectTitle = document.getElementById('subject-title');
+        const progress = document.getElementById('progress');
+        const questionsDiv = document.getElementById('questions');
+        const backButton = document.getElementById('back');
+        const nextButton = document.getElementById('next');
         
-        let htmlStr = `
-            <p class="question-text">${qObj.question}</p>
-            <div class="math-container">${qObj.description}</div>
-            <div class="options-container">
-        `;
+        questionsDiv.innerHTML = '';
         
-        for (const option in qObj.options) {
-            htmlStr += `
-                <div class="option-container">
-                    <input type="radio" name="q${i}" value="${option}" id="q${i}${option}">
-                    <label for="q${i}${option}">${qObj.options[option]}</label>
-                </div>
-            `;
+        subjectTitle.textContent = subject + ' 模擬試題';
+        progress.textContent = `第 ${currentSubjectIndex + 1} 科，共 ${selectedSubjects.length} 科`;
+
+        // Show/hide back button based on current subject index
+        if (currentSubjectIndex > 0) {
+            backButton.classList.remove('hidden');
+        } else {
+            backButton.classList.add('hidden');
         }
-        
-        htmlStr += '</div>';
-        questionContainer.innerHTML = htmlStr;
-        questionsDiv.appendChild(questionContainer);
-      }
 
-      // After adding all questions, render the math if needed
-      renderMathInElement(questionsDiv);
+        // Update next button text based on whether it's the last subject
+        if (currentSubjectIndex === selectedSubjects.length - 1) {
+            nextButton.textContent = '完成';
+        } else {
+            nextButton.textContent = '下一科';
+        }
+
+        // If the subject is Chinese ("中文"), handle two parts
+        if (subject === '中文') {
+            // Retrieve the Chinese exam content
+            const examContent = availableSubjects[subject];
+
+            // === Modern Prose Part ===
+            const modernInsDiv = document.createElement('div');
+            modernInsDiv.className = 'instruction-container';
+            modernInsDiv.innerHTML = examContent.modern.instruction;
+            questionsDiv.appendChild(modernInsDiv);
+
+            const modernPassageDiv = document.createElement('div');
+            modernPassageDiv.className = 'passage-container';
+            modernPassageDiv.innerHTML = examContent.modern.passage;
+            questionsDiv.appendChild(modernPassageDiv);
+
+            // Loop over modern questions
+            examContent.modern.questions.forEach((qObj, i) => {
+                const questionContainer = document.createElement('div');
+                questionContainer.className = 'question-container';
+                
+                let htmlStr = `
+                    <p class="question-text">${qObj.question}</p>
+                    <div class="math-container">${qObj.description}</div>
+                    <div class="options-container">
+                `;
+                
+                for (const option in qObj.options) {
+                    htmlStr += `
+                        <div class="option-container">
+                            <input type="radio" name="modernq${i}" value="${option}" id="modernq${i}${option}">
+                            <label for="modernq${i}${option}">${qObj.options[option]}</label>
+                        </div>
+                    `;
+                }
+                
+                htmlStr += '</div>';
+                questionContainer.innerHTML = htmlStr;
+                questionsDiv.appendChild(questionContainer);
+            });
+
+            // Divider between parts
+            const divider = document.createElement('hr');
+            questionsDiv.appendChild(divider);
+
+            // === Classical Part ===
+            const classicalInsDiv = document.createElement('div');
+            classicalInsDiv.className = 'instruction-container';
+            classicalInsDiv.innerHTML = examContent.classical.instruction;
+            questionsDiv.appendChild(classicalInsDiv);
+
+            const classicalPassageDiv = document.createElement('div');
+            classicalPassageDiv.className = 'passage-container';
+            classicalPassageDiv.innerHTML = examContent.classical.passage;
+            questionsDiv.appendChild(classicalPassageDiv);
+
+            // Loop over classical questions
+            examContent.classical.questions.forEach((qObj, i) => {
+                const questionContainer = document.createElement('div');
+                questionContainer.className = 'question-container';
+                
+                let htmlStr = `
+                    <p class="question-text">${qObj.question}</p>
+                    <div class="math-container">${qObj.description}</div>
+                    <div class="options-container">
+                `;
+                
+                for (const option in qObj.options) {
+                    htmlStr += `
+                        <div class="option-container">
+                            <input type="radio" name="classicalq${i}" value="${option}" id="classicalq${i}${option}">
+                            <label for="classicalq${i}${option}">${qObj.options[option]}</label>
+                        </div>
+                    `;
+                }
+                
+                htmlStr += '</div>';
+                questionContainer.innerHTML = htmlStr;
+                questionsDiv.appendChild(questionContainer);
+            });
+
+            renderMathInElement(questionsDiv);
+            return;
+        }
+
+        // For other subjects, process as before:
+        // Retrieve the structured questions for this subject from availableSubjects.
+        const questions = availableSubjects[subject];
+        // Loop through each question and build its HTML.
+        for (let i = 0; i < questions.length; i++) {
+            const qObj = questions[i];
+            const questionContainer = document.createElement('div');
+            questionContainer.className = 'question-container';
+            
+            let htmlStr = `
+                <p class="question-text">${qObj.question}</p>
+                <div class="math-container">${qObj.description}</div>
+                <div class="options-container">
+            `;
+            
+            for (const option in qObj.options) {
+                htmlStr += `
+                    <div class="option-container">
+                        <input type="radio" name="q${i}" value="${option}" id="q${i}${option}">
+                        <label for="q${i}${option}">${qObj.options[option]}</label>
+                    </div>
+                `;
+            }
+            
+            htmlStr += '</div>';
+            questionContainer.innerHTML = htmlStr;
+            questionsDiv.appendChild(questionContainer);
+        }
+
+        // After adding all questions, render the math if needed
+        renderMathInElement(questionsDiv);
     }
 
     // Next Button Logic: Before moving to the next subject, store the user's answers.
     document.getElementById('next').addEventListener('click', () => {
-      // Save the answers for the current subject.
-      const currentSubject = selectedSubjects[currentSubjectIndex];
-      storeAnswers(currentSubject);
+        // Save the answers for the current subject.
+        const currentSubject = selectedSubjects[currentSubjectIndex];
+        storeAnswers(currentSubject);
 
-      // Increment the subject index.
-      currentSubjectIndex++;
-      if (currentSubjectIndex < selectedSubjects.length) {
-        // Scroll to top of page before showing new questions
-        window.scrollTo(0, 0);
-        displayQuestion(selectedSubjects[currentSubjectIndex]);
-      } else {
-        // All subjects are completed; show the final info page.
-        window.scrollTo(0, 0);
-        document.getElementById('exam-page').classList.add('hidden');
-        document.getElementById('final-page').classList.remove('hidden');
-      }
+        // Increment the subject index.
+        currentSubjectIndex++;
+        if (currentSubjectIndex < selectedSubjects.length) {
+            // Scroll to top of page before showing new questions
+            window.scrollTo(0, 0);
+            displayQuestion(selectedSubjects[currentSubjectIndex]);
+        } else {
+            // All subjects are completed; show the final info page.
+            window.scrollTo(0, 0);
+            document.getElementById('exam-page').classList.add('hidden');
+            document.getElementById('final-page').classList.remove('hidden');
+        }
     });
 
     // Back Button Logic
@@ -949,20 +949,20 @@
 
     // Function to store the user's selected answers for the current subject.
     function storeAnswers(subject) {
-      const answers = [];
-      const questions = availableSubjects[subject];
-      for (let i = 0; i < questions.length; i++) {
-        // Get the radio buttons for the question with the name "q" + index.
-        const radios = document.getElementsByName("q" + i);
-        let selectedValue = "";
-        radios.forEach(radio => {
-          if (radio.checked) {
-            selectedValue = radio.value;
-          }
-        });
-        answers.push(selectedValue);
-      }
-      examData[subject] = answers;
+        const answers = [];
+        const questions = availableSubjects[subject];
+        for (let i = 0; i < questions.length; i++) {
+            // Get the radio buttons for the question with the name "q" + index.
+            const radios = document.getElementsByName("q" + i);
+            let selectedValue = "";
+            radios.forEach(radio => {
+                if (radio.checked) {
+                    selectedValue = radio.value;
+                }
+            });
+            answers.push(selectedValue);
+        }
+        examData[subject] = answers;
     }
 
     // Add this inside your script section
@@ -986,19 +986,19 @@
     }
 
     function showEnglishPassage() {
-      const passageContainer = document.createElement('div');
-      passageContainer.className = 'english-passage';
-      passageContainer.innerHTML = passage;
-      
-      // Insert the passage before the questions
-      const questionsContainer = document.querySelector('.questions-container');
-      questionsContainer.insertBefore(passageContainer, questionsContainer.firstChild);
+        const passageContainer = document.createElement('div');
+        passageContainer.className = 'english-passage';
+        passageContainer.innerHTML = passage;
+        
+        // Insert the passage before the questions
+        const questionsContainer = document.querySelector('.questions-container');
+        questionsContainer.insertBefore(passageContainer, questionsContainer.firstChild);
     }
 
     function handleSubjectSelection(subject) {
-      if (subject === 'English') {
-        showEnglishPassage();
-      }
+        if (subject === 'English') {
+            showEnglishPassage();
+        }
     }
   </script>
 
