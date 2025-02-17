@@ -268,6 +268,31 @@
     #infoForm button:hover {
       background-color: #0056b3;
     }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding: 0 20px;
+    }
+
+    .button-container button {
+        padding: 10px 20px;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .button-container button:hover {
+        background-color: #1557b0;
+    }
+
+    .hidden {
+        display: none !important;
+    }
   </style>
 </head>
 <body>
@@ -296,7 +321,10 @@
       <!-- Questions will be loaded here dynamically -->
     </div>
     <!-- Next button to move to the next subject's questions -->
-    <button id="next">Next</button>
+    <div class="button-container">
+        <button id="back" class="hidden" style="padding: 10px 20px;">返回上一科</button>
+        <button id="next">Next</button>
+    </div>
   </div>
 
   <!-- Final Info Collection Section: Collects user's email and phone to send the report -->
@@ -649,6 +677,18 @@
         document.getElementById('exam-page').classList.add('hidden');
         document.getElementById('final-page').classList.remove('hidden');
       }
+    });
+
+    // Back Button Logic
+    document.getElementById('back').addEventListener('click', () => {
+        // Save the answers for the current subject
+        const currentSubject = selectedSubjects[currentSubjectIndex];
+        storeAnswers(currentSubject);
+
+        // Decrement the subject index
+        currentSubjectIndex--;
+        window.scrollTo(0, 0);
+        displayQuestion(selectedSubjects[currentSubjectIndex]);
     });
 
     /******** Final Info Collection and Report Sending Logic ********/
